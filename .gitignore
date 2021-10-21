@@ -5,3 +5,4 @@ coverage
 .vsix
 dist
 .eslintcache
+.history

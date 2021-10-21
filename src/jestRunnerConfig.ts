@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import { isWindows, normalizePath, quote, validateCodeLensOptions } from './util';
+import { isWindows, normalizePath, quote, validateCodeLensOptions, CodeLensOption } from './util';
 
 export class JestRunnerConfig {
   /**
@@ -106,7 +106,7 @@ export class JestRunnerConfig {
     let currentFolderPath: string = targetPath || path.dirname(vscode.window.activeTextEditor.document.fileName);
     let currentFolderConfigPath: string;
     do {
-      for (const configFilename of ['jest.config.js', 'jest.config.ts']) {
+      for (const configFilename of ['jest.config.js', 'jest.config.cjs', 'jest.config.ts']) {
         currentFolderConfigPath = path.join(currentFolderPath, configFilename);
 
         if (fs.existsSync(currentFolderConfigPath)) {
