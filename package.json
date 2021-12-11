@@ -107,6 +107,12 @@
             "default": false,
             "description": "Preserve focus on editor when running tests",
             "scope": "window"
+          },
+          "jestrunner.jestCommandAlias": {
+            "type": "string",
+            "default": "jest",
+            "description": "Define jest command alias(such as my-custom-jest-command)",
+            "scope": "window"
           }
         }
       }

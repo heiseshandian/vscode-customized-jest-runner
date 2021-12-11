@@ -17,9 +17,14 @@ export class JestRunnerConfig {
 
     // default
     if (this.isYarnPnpSupportEnabled) {
-      return `yarn jest`;
+      return `yarn ${this.jestCommandAlias}`;
     }
     return `node ${quote(this.jestBinPath)}`;
+  }
+
+  public get jestCommandAlias(): string {
+    const alias: string = vscode.workspace.getConfiguration().get('jestrunner.jestCommandAlias') || 'jest';
+    return alias;
   }
 
   public get changeDirectoryToWorkspaceRoot(): boolean {
