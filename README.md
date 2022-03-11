@@ -4,7 +4,7 @@ A customized version of [vscode-jest-runner](https://github.com/firsttris/vscode
 
 ## configs
 
-![Change Configs as below](https://github.com/heiseshandian/vscode-customized-jest-runner/raw/master/public/config.png)
+![Change Configs as below](https://github.com/heiseshandian/vscode-customized-jest-runner/raw/master/public/configs.png)
 
 ## Supports
 
