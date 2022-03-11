@@ -1,13 +1,13 @@
 {
-  "name": "vscode-ringcentral-jest-runner",
-  "displayName": "Jest Runner",
+  "name": "vscode-customized-jest-runner",
+  "displayName": "Customized Jest Runner",
   "description": "Simple way to run or debug a single (or multiple) tests from context-menu",
   "version": "0.5.47",
   "publisher": "baymax",
-  "author": "Tristan Teufel",
+  "author": "baymax",
   "repository": {
     "type": "git",
-    "url": "https://github.com/firsttris/vscode-jest-runner.git"
+    "url": "https://github.com/heiseshandian/vscode-customized-jest-runner"
   },
   "license": "MIT",
   "icon": "public/icon.png",
