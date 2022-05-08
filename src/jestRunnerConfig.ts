@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import * as vscode from 'vscode';
-import { isWindows, normalizePath, quote, validateCodeLensOptions, CodeLensOption } from './util';
+import { normalizePath, quote, validateCodeLensOptions, CodeLensOption, isNodeExecuteAbleFile } from './util';
 
 export class JestRunnerConfig {
   /**
@@ -43,10 +43,12 @@ export class JestRunnerConfig {
     }
 
     // default
-    const relativeJestBin = isWindows() ? 'node_modules/jest/bin/jest.js' : 'node_modules/.bin/jest';
+    const fallbackRelativeJestBinPath = 'node_modules/jest/bin/jest.js';
+    const mayRelativeJestBin = ['node_modules/.bin/jest', 'node_modules/jest/bin/jest.js'];
     const cwd = this.cwd;
 
-    jestPath = path.join(cwd, relativeJestBin);
+    jestPath = mayRelativeJestBin.find((relativeJestBin) => isNodeExecuteAbleFile(path.join(cwd, relativeJestBin)));
+    jestPath = jestPath || path.join(cwd, fallbackRelativeJestBinPath);
 
     return normalizePath(jestPath);
   }
@@ -163,5 +165,9 @@ export class JestRunnerConfig {
   public get isYarnPnpSupportEnabled(): boolean {
     const isYarnPnp: boolean = vscode.workspace.getConfiguration().get('jestrunner.enableYarnPnpSupport');
     return isYarnPnp ? isYarnPnp : false;
+  }
+  public get getYarnPnpCommand(): string {
+    const yarnPnpCommand: string = vscode.workspace.getConfiguration().get('jestrunner.yarnPnpCommand');
+    return yarnPnpCommand;
   }
 }
