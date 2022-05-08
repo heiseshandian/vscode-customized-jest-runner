@@ -1,4 +1,4 @@
-import { parse } from 'jest-editor-support';
+import { parse } from './parser';
 import * as vscode from 'vscode';
 import { JestRunnerConfig } from './jestRunnerConfig';
 import {
@@ -95,6 +95,7 @@ export class JestRunner {
   public async debugTestsOnPath(path: string): Promise<void> {
     const debugConfig = this.getDebugConfig(path);
 
+    await this.goToCwd();
     this.executeDebugCommand({
       config: debugConfig,
       documentUri: vscode.Uri.file(path),
@@ -113,6 +114,7 @@ export class JestRunner {
     const testName = currentTestName || this.findCurrentTestName(editor);
     const debugConfig = this.getDebugConfig(filePath, testName);
 
+    await this.goToCwd();
     this.executeDebugCommand({
       config: debugConfig,
       documentUri: editor.document.uri,
@@ -124,7 +126,7 @@ export class JestRunner {
   //
 
   private executeDebugCommand(debugCommand: DebugCommand) {
-    vscode.debug.startDebugging(vscode.workspace.getWorkspaceFolder(debugCommand.documentUri), debugCommand.config);
+    vscode.debug.startDebugging(undefined, debugCommand.config);
 
     this.previousCommand = debugCommand;
   }
@@ -144,8 +146,8 @@ export class JestRunner {
     config.args = config.args ? config.args.slice() : [];
 
     if (this.config.isYarnPnpSupportEnabled) {
-      config.args = [this.config.jestCommandAlias];
-      config.program = '.yarn/releases/yarn-*.*js';
+      config.args = ['jest'];
+      config.program = `.yarn/releases/${this.config.getYarnPnpCommand}`;
     }
 
     const standardArgs = this.buildJestArgs(filePath, currentTestName, false);
