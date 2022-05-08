@@ -23,7 +23,7 @@ export class JestRunnerConfig {
   }
 
   public get jestCommandAlias(): string {
-    const alias: string = vscode.workspace.getConfiguration().get('jestrunner.jestCommandAlias') || 'jest';
+    const alias: string = vscode.workspace.getConfiguration().get('jestrunner.jestCommandAlias');
     return alias;
   }
 
@@ -166,8 +166,19 @@ export class JestRunnerConfig {
     const isYarnPnp: boolean = vscode.workspace.getConfiguration().get('jestrunner.enableYarnPnpSupport');
     return isYarnPnp ? isYarnPnp : false;
   }
+
   public get getYarnPnpCommand(): string {
     const yarnPnpCommand: string = vscode.workspace.getConfiguration().get('jestrunner.yarnPnpCommand');
-    return yarnPnpCommand;
+    return yarnPnpCommand || this.getDefaultYarnPnpCommand;
+  }
+
+  private get getDefaultYarnPnpCommand(): string {
+    const { currentWorkspaceFolderPath } = this;
+    if (!currentWorkspaceFolderPath) {
+      return '';
+    }
+
+    const files = fs.readdirSync(path.resolve(currentWorkspaceFolderPath, '.yarn/releases'));
+    return (files || []).find((file) => /yarn.*js/.test(file));
   }
 }

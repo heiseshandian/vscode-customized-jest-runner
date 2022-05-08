@@ -146,7 +146,7 @@ export class JestRunner {
     config.args = config.args ? config.args.slice() : [];
 
     if (this.config.isYarnPnpSupportEnabled) {
-      config.args = ['jest'];
+      config.args = [this.config.jestCommandAlias];
       config.program = `.yarn/releases/${this.config.getYarnPnpCommand}`;
     }
 
