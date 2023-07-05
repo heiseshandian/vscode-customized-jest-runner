@@ -11,6 +11,7 @@ import {
   quote,
   unquote,
 } from './util';
+import * as path from 'path';
 
 interface DebugCommand {
   documentUri: vscode.Uri;
@@ -51,12 +52,21 @@ export class JestRunner {
 
     const filePath = editor.document.fileName;
     const testName = currentTestName || this.findCurrentTestName(editor);
+
     const command = this.buildJestCommand(filePath, testName, options);
 
     this.previousCommand = command;
 
     await this.goToCwd();
     await this.runTerminalCommand(command);
+
+    this.openCoverage(filePath);
+  }
+
+  public async openCoverage(filePath) {
+    const jestConfigPath = this.config.getJestConfigPath(filePath);
+    const coveragePath = path.join(jestConfigPath, '../coverage/index.html');
+    await this.runTerminalCommand(`open ${coveragePath}`);
   }
 
   public async runCurrentFile(options?: string[]): Promise<void> {
@@ -201,6 +211,13 @@ export class JestRunner {
     }
 
     args.push(...setOptions);
+
+    if (options.includes('--coverage')) {
+      const fileParentDirPath = path.join(path.dirname(filePath), '..');
+      const jestConfigDirPath = path.dirname(jestConfigPath);
+      const collectCoverageFrom = path.relative(jestConfigDirPath, fileParentDirPath) + '/**';
+      args.push(`--collectCoverageFrom='${collectCoverageFrom}'`);
+    }
 
     return args;
   }

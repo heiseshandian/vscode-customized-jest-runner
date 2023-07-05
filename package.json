@@ -2,7 +2,7 @@
   "name": "vscode-customized-jest-runner",
   "displayName": "Customized Jest Runner",
   "description": "Simple way to run or debug a single (or multiple) tests from context-menu",
-  "version": "0.5.55",
+  "version": "0.5.56",
   "publisher": "baymax",
   "author": "baymax",
   "repository": {
@@ -76,12 +76,13 @@
             "type": "array",
             "default": [
               "run",
-              "debug"
+              "debug",
+              "coverage"
             ],
-            "description": "Enable desired codeLens, possible value : 'run', 'debug', 'watch'. Defaults to ['run', 'debug'] ",
+            "description": "Enable desired codeLens, possible value : 'run', 'debug', 'watch', 'coverage'. Defaults to ['run', 'debug', 'coverage'] ",
             "items": {
               "type": "string",
-              "description": "Either 'run', 'debug' or 'watch'"
+              "description": "Either 'run', 'debug', 'watch' or 'coverage'"
             },
             "scope": "window"
           },
@@ -162,6 +163,10 @@
       {
         "command": "extension.watchJest",
         "title": "Watch Jest"
+      },
+      {
+        "command": "extension.coverageJest",
+        "title": "Coverage Jest"
       }
     ],
     "menus": {
@@ -176,6 +181,10 @@
         },
         {
           "command": "extension.watchJest",
+          "group": "02_jest"
+        },
+        {
+          "command": "extension.coverageJest",
           "group": "02_jest"
         }
       ],

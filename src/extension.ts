@@ -59,6 +59,17 @@ export function activate(context: vscode.ExtensionContext): void {
     }
   );
 
+  const coverageJest = vscode.commands.registerCommand(
+    'extension.coverageJest',
+    async (argument: Record<string, unknown> | string) => {
+      if (typeof argument === 'string') {
+        jestRunner.runCurrentTest(argument, ['--coverage']);
+      } else {
+        jestRunner.runCurrentTest(undefined, ['--coverage']);
+      }
+    }
+  );
+
   if (!config.isCodeLensDisabled) {
     const docSelectors: vscode.DocumentFilter[] = [
       { pattern: vscode.workspace.getConfiguration().get('jestrunner.codeLensSelector') },
@@ -76,6 +87,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(runJestFileWithCoverage);
   context.subscriptions.push(runJestFileWithWatchMode);
   context.subscriptions.push(watchJest);
+  context.subscriptions.push(coverageJest);
 }
 
 export function deactivate(): void {

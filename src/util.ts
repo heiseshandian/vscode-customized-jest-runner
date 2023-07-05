@@ -82,10 +82,10 @@ export function escapePlusSign(s: string): string {
   return s.replace(/[+]/g, '\\$&');
 }
 
-export type CodeLensOption = 'run' | 'debug' | 'watch';
+export type CodeLensOption = 'run' | 'debug' | 'watch' | 'coverage';
 
 function isCodeLensOption(option: string): option is CodeLensOption {
-  return option === 'run' || option === 'debug' || option === 'watch';
+  return option === 'run' || option === 'debug' || option === 'watch' || option === 'coverage';
 }
 
 export function validateCodeLensOptions(maybeCodeLensOptions: string[]): CodeLensOption[] {
