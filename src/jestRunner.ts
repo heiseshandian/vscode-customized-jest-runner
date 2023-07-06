@@ -11,7 +11,10 @@ import {
   quote,
   unquote,
 } from './util';
+import { existsSync } from 'fs';
 import * as path from 'path';
+import { execSync } from 'child_process';
+import { openDefaultBrowser } from './openBrowser';
 
 interface DebugCommand {
   documentUri: vscode.Uri;
@@ -59,14 +62,38 @@ export class JestRunner {
 
     await this.goToCwd();
     await this.runTerminalCommand(command);
-
-    this.openCoverage(filePath);
+    if (options.includes('--coverage')) {
+      await this.waitForCoverageFileGeneratedAndOpen(filePath);
+    }
   }
 
-  public async openCoverage(filePath) {
+  public getCoverageFilePath(filePath: string): string {
     const jestConfigPath = this.config.getJestConfigPath(filePath);
-    const coveragePath = path.join(jestConfigPath, '../coverage/index.html');
-    await this.runTerminalCommand(`open ${coveragePath}`);
+    return path.join(jestConfigPath, '../coverage/index.html');
+  }
+
+  public async waitForCoverageFileGeneratedAndOpen(filePath: string): Promise<void> {
+    const coverageFilePath = this.getCoverageFilePath(filePath);
+    await new Promise((resolve, reject) => {
+      let timeRecorder = 0;
+      const timer = setInterval(() => {
+        timeRecorder += 1000;
+        if (timeRecorder > 3 * 60 * 1000) {
+          clearInterval(timer);
+          reject(
+            new Error(
+              'The process of running case to generate coverage timed out, please retry or check your terminal execution'
+            )
+          );
+        }
+
+        if (existsSync(coverageFilePath)) {
+          clearInterval(timer);
+          resolve(coverageFilePath);
+        }
+      }, 1000);
+    });
+    openDefaultBrowser(coverageFilePath);
   }
 
   public async runCurrentFile(options?: string[]): Promise<void> {
@@ -213,6 +240,11 @@ export class JestRunner {
     args.push(...setOptions);
 
     if (options.includes('--coverage')) {
+      const coveragePath = this.getCoverageFilePath(filePath);
+      if (existsSync(coveragePath)) {
+        execSync(`rm ${coveragePath}`, { stdio: 'inherit' });
+      }
+
       const fileParentDirPath = path.join(path.dirname(filePath), '..');
       const jestConfigDirPath = path.dirname(jestConfigPath);
       const collectCoverageFrom = path.relative(jestConfigDirPath, fileParentDirPath) + '/**';
