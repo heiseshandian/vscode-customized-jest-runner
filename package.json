@@ -2,7 +2,7 @@
   "name": "vscode-customized-jest-runner",
   "displayName": "Customized Jest Runner",
   "description": "Simple way to run or debug a single (or multiple) tests from context-menu",
-  "version": "0.5.57",
+  "version": "0.5.58",
   "publisher": "baymax",
   "author": "baymax",
   "repository": {

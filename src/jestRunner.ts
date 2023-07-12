@@ -247,7 +247,9 @@ export class JestRunner {
 
       const fileParentDirPath = path.join(path.dirname(filePath), '..');
       const jestConfigDirPath = path.dirname(jestConfigPath);
-      const collectCoverageFrom = path.relative(jestConfigDirPath, fileParentDirPath) + '/**';
+      const collectCoverageFrom =
+        path.relative(jestConfigDirPath, fileParentDirPath) +
+        `/**/${path.basename(filePath).replace(/(\.test)|(\.spec)/, '')}`;
       args.push(`--collectCoverageFrom='${collectCoverageFrom}'`);
     }
 
