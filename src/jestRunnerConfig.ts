@@ -73,7 +73,7 @@ export class JestRunnerConfig {
       // such as in multi-module projects.
       const pkg = path.join(currentFolderPath, 'package.json');
       const jest = path.join(currentFolderPath, 'node_modules', 'jest');
-      if (fs.existsSync(pkg) && fs.existsSync(jest)) {
+      if (fs.existsSync(pkg) && (this.isYarnPnpSupportEnabled ? true : fs.existsSync(jest))) {
         return currentFolderPath;
       }
       currentFolderPath = path.join(currentFolderPath, '..');
