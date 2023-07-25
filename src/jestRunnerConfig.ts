@@ -57,6 +57,10 @@ export class JestRunnerConfig {
     return vscode.workspace.getConfiguration().get('jestrunner.projectPath') || this.currentWorkspaceFolderPath;
   }
 
+  public get sonarqubeOrigin(): string {
+    return vscode.workspace.getConfiguration().get('jestrunner.sonarqubeOrigin');
+  }
+
   public get cwd(): string {
     return (
       vscode.workspace.getConfiguration().get('jestrunner.projectPath') ||

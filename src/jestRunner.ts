@@ -276,4 +276,30 @@ export class JestRunner {
       this.terminal = null;
     });
   }
+
+  public openSonarqubeCoverage() {
+    const sonarqubeOrigin = this.config.sonarqubeOrigin;
+    if (!sonarqubeOrigin) {
+      vscode.window.showErrorMessage(`jestrunner.sonarqubeOrigin is empty, please config!`);
+      return;
+    }
+    const editor = vscode.window.activeTextEditor;
+    if (!editor) {
+      return;
+    }
+    const workspaceFolder = this.config.currentWorkspaceFolderPath;
+    if (!workspaceFolder) {
+      return;
+    }
+    const filePath = path.relative(workspaceFolder, editor.document.fileName);
+    if (!filePath) {
+      return;
+    }
+    const row = editor.selection.start.line;
+    openDefaultBrowser(
+      `${sonarqubeOrigin}code?id=serviceweb-scs&selected=serviceweb-scs:` +
+        encodeURIComponent(filePath) +
+        (row && `&line=${row}`)
+    );
+  }
 }

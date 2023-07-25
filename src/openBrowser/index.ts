@@ -1,7 +1,6 @@
 import Config from './config';
 import * as vscode from 'vscode';
-
-const opn = require('opn');
+import * as opn from 'opn';
 
 /**
  * get standardized browser name

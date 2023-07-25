@@ -70,6 +70,17 @@ export function activate(context: vscode.ExtensionContext): void {
     }
   );
 
+  const openSonarqubeCoverage = vscode.commands.registerCommand(
+    'extension.coverageSonarqube',
+    async (argument: Record<string, unknown> | string) => {
+      if (typeof argument === 'string') {
+        jestRunner.openSonarqubeCoverage();
+      } else {
+        jestRunner.openSonarqubeCoverage();
+      }
+    }
+  );
+
   if (!config.isCodeLensDisabled) {
     const docSelectors: vscode.DocumentFilter[] = [
       { pattern: vscode.workspace.getConfiguration().get('jestrunner.codeLensSelector') },
@@ -88,6 +99,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(runJestFileWithWatchMode);
   context.subscriptions.push(watchJest);
   context.subscriptions.push(coverageJest);
+  context.subscriptions.push(openSonarqubeCoverage);
 }
 
 export function deactivate(): void {
