@@ -247,9 +247,14 @@ export class JestRunner {
 
       const fileParentDirPath = path.join(path.dirname(filePath), '..');
       const jestConfigDirPath = path.dirname(jestConfigPath);
-      const collectCoverageFrom =
-        path.relative(jestConfigDirPath, fileParentDirPath) +
-        `/**/${path.basename(filePath).replace(/(\.test)|(\.spec)/, '')}`;
+
+      const sameFileName = path.basename(filePath).replace(/(\.test)|(\.spec)/, '');
+      const targetFilePath = path.join(fileParentDirPath, sameFileName);
+
+      const collectCoverageFrom = existsSync(targetFilePath)
+        ? path.join(path.relative(jestConfigDirPath, fileParentDirPath), sameFileName)
+        : path.relative(jestConfigDirPath, fileParentDirPath) + `/**`;
+
       args.push(`--collectCoverageFrom='${collectCoverageFrom}'`);
     }
 

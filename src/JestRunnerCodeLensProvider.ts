@@ -51,6 +51,11 @@ function getTestsBlocks(
   return codeLens;
 }
 
+const getFirstRangeCodeLens = (codeLensOptions: CodeLensOption[]): CodeLens[] => {
+  const range = new Range(0, 0, 0, 0);
+  return codeLensOptions.map((option) => getCodeLensForOption(range, option, undefined));
+};
+
 export class JestRunnerCodeLensProvider implements CodeLensProvider {
   constructor(private readonly codeLensOptions: CodeLensOption[]) {}
 
@@ -62,6 +67,7 @@ export class JestRunnerCodeLensProvider implements CodeLensProvider {
       parseResults.forEach((parseResult) =>
         codeLens.push(...getTestsBlocks(parseResult, parseResults, this.codeLensOptions))
       );
+      codeLens.push(...getFirstRangeCodeLens(this.codeLensOptions));
       return codeLens;
     } catch (e) {
       // Ignore error and keep showing Run/Debug buttons at same position
